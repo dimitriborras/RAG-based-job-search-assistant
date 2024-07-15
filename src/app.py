@@ -11,7 +11,7 @@ def show_sidebar_content(tab):
         st.sidebar.title("API Settings")
         ai_provider_toggle = st.sidebar.radio("Select AI Provider", ("Anthropic 🦜", "OpenAI 🤖"), key="ai_provider_toggle")
         ai_provider = ai_provider_toggle.split()[0]
-        api_key = st.sidebar.text_input("Enter your API key:", type="password", key="api_key")
+        api_key = st.sidebar.text_input("Enter your API key:", type="password")
 
         if not api_key:
             st.sidebar.error("🚨 Please enter a valid API key to use the app.")
@@ -90,9 +90,24 @@ def main():
     if "selected_tab" not in st.session_state:
         st.session_state.selected_tab = "Generator"
 
+    #add the sidebar content here because I dont know how to manage sidebar dynamically according to the selected tab so I need to retrieve variable value like api_key
     with tabs[0]:
         st.session_state.selected_tab = "Generator"
-        show_sidebar_content("Generator")
+        # Sidebar content for Generator tab
+        st.sidebar.title("API Settings")
+        ai_provider_toggle = st.sidebar.radio("Select AI Provider", ("Anthropic 🦜", "OpenAI 🤖"), key="ai_provider_toggle")
+        ai_provider = ai_provider_toggle.split()[0]
+        api_key = st.sidebar.text_input("Enter your API key:", type="password")
+
+        if not api_key:
+            st.sidebar.error("🚨 Please enter a valid API key to use the app.")
+            st.stop()
+
+        st.sidebar.warning("⚠️ Heads up: make sure you have a valid API key from either provider and sufficient funds in your account. Otherwise, the app won't work.")
+
+        st.sidebar.subheader("Additional Settings 🔧")
+        formality_level = st.sidebar.select_slider("Formality Level for cover letter and email 📝", ["Super Casual", "Casual", "Neutral", "Formal", "Super Formal"], value="Neutral", key="formality_level")
+        additional_info = st.sidebar.text_area("Additional Information 💡", height=100, placeholder="Anything else you want the AI to consider or focus on?", key="additional_info")
         st.header("Generate Documents")
         # User inputs
         st.subheader("Paste your resume here 📝")
